@@ -59,8 +59,6 @@ def generate_csv():
 
   api.set_position(*position)
 
-  print 'logging in with {}, {}, {}'.format(auth_service, username, password)
-
   if not api.login(auth_service, username, password, False):
     return 'login failed'
 
