@@ -74,7 +74,7 @@ def get_csv(data):
     row['Combo Damage'] = dps_obj.get('F&S Combo Dmg', '')
     row['Height'] = str(pokemon['height_m'])
     row['Weight'] = str(pokemon['weight_kg'])
-    row['HP'] = pokemon['stamina']
+    row['HP'] = pokemon.get('stamina', 0)
     row['Max HP'] = pokemon['stamina_max']
     row['Attack'] = pokemon.get('individual_attack', 0)
     row['Defense'] = pokemon.get('individual_defense', 0)
