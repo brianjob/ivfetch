@@ -133,6 +133,10 @@ class PGoApi:
         self.check_awarded_badges()
         self.get_inventory()
         res = self.call()
+
+        if not res:
+            return {}
+
         if res.get("direction",-1) == 102:
             self.log.error("There were a problem responses for api call: %s. Restarting!!!", res)
             raise AuthException("Token probably expired?")
@@ -355,6 +359,7 @@ class PGoApi:
             self.log.debug('Setting API endpoint to: %s', self._api_endpoint)
         else:
             self.log.error('Login failed - unexpected server response!')
+            self.log.debug(response)
             return False
 
         if 'auth_ticket' in response:

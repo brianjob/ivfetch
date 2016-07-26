@@ -7,7 +7,7 @@ from flask import Flask, request, redirect, url_for, abort, \
 from pgoapi import PGoApi
 from geopy.geocoders import GoogleV3
 from time import sleep
-from inventory2csv import get_csv
+from inventory2csv import get_csv, get_json, get_keys
 
 def get_pos_by_name(location_name):
     geolocator = GoogleV3()
@@ -42,25 +42,16 @@ if config.debug:
 pokemon_names = json.load(open("name_id.json"))
 api = PGoApi(config.__dict__, pokemon_names)
 
-
-@app.route("/")
-def home():
-    return render_template('index.html')
-
-@app.route("/generate", methods=['POST'])
-def generate_csv():
-  auth_service = request.form['auth_service']
-  username = request.form['username']
-  password = request.form['password']
-  location = request.form['location']
+def request_user_info(req):
+  auth_service = req.form['auth_service']
+  username = req.form['username']
+  password = req.form['password']
+  location = req.form['location']
   position = get_pos_by_name(location)
-
-  api = PGoApi(config.__dict__, pokemon_names)
-
   api.set_position(*position)
 
   if not api.login(auth_service, username, password, False):
-    return 'login failed'
+    return {}
 
   res = {}
 
@@ -68,12 +59,28 @@ def generate_csv():
     res = api.heartbeat()
     sleep(2)
 
-  csv = get_csv(res['responses'])
+  return res['responses']
+
+@app.route("/")
+def home():
+  return render_template('index.html')
+
+@app.route("/csv", methods=['POST'])
+def csv():
+  user_info = request_user_info(request)
+  csv = get_csv(user_info)
 
   response = make_response(csv)
   response.headers["Content-Disposition"] = "attachment; filename=pokemonIVs.csv"
   return response
 
+@app.route("/data_table", methods=['POST'])
+def data_table():
+  user_info = request_user_info(request)
+  data = get_json(user_info)
+
+  keys = get_keys()
+  return render_template('data_table.html', data=data, keys=keys)
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
