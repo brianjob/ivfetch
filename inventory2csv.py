@@ -83,7 +83,7 @@ def get_json(data):
     dps_obj = get_dps_obj(species, move_1, move_2)
 
     row[SPECIES] = species
-    row[NICKNAME] = pokemon.get('nickname', '').encode('utf8')
+    row[NICKNAME] = unicode(pokemon.get('nickname', ''))
     row[MOVE_1] = move_1
     row[MOVE_2] = move_2
     row[FAST_DPS] = dps_obj.get('Fast DPS', '')
@@ -113,6 +113,6 @@ def get_csv(data):
 
   table = [keys] + map(lambda x: [x[key] for key in keys], rows)
 
-  csv_str = "\n".join([','.join(map(str, x)) for x in table])
+  csv_str = "\n".join([','.join(map(unicode, x)) for x in table])
 
   return csv_str
