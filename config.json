@@ -1,0 +1,13 @@
+    {"accounts" :
+    [
+    {  "auth_service": "ptc",
+        "username": "BobbyBlumkin",
+        "password": "tester",
+        "location": "42.276563298901976,-83.69927965312547",
+        "USE_GOOGLE": true,
+        "GMAPS_API_KEY": "AIzaSyApkt58fglcRQpP3inWLcB_6VfEPkvwi8w",
+        "MIN_KEEP_IV" : 80,
+        "KEEP_CP_OVER": 300,
+        "STEP_SIZE": 25
+    }
+    ]}
